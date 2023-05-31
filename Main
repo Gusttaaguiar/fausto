@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <time.h>
+#include <ncurses.h>
+
+int main() {
+   
+    initscr();
+    curs_set(0);
+    nodelay(stdscr, TRUE);
+    timeout(0);
+
+   
+    time_t end_time = time(NULL) + 86400;
+    while (time(NULL) < end_time) {
+       
+        clear();
+
+       
+        time_t current_time = time(NULL);
+        struct tm *timeinfo = localtime(&current_time);
+
+     
+        char formatted_time[12];
+        strftime(formatted_time, sizeof(formatted_time), "%I:%M:%S %p", timeinfo);
+
+       
+        int x, y;
+        getmaxyx(stdscr, y, x);
+        x /= 2;
+        y /= 2;
+
+       
+        mvprintw(y, x - (strlen(formatted_time) / 2), formatted_time);
+
+       
+        refresh();
+
+       
+        sleep(1);
+
+       
+        int key = getch();
+        if (key != ERR) {
+            break;
+        }
+    }
+
+   
+    endwin();
+
+    return 0;
+}
